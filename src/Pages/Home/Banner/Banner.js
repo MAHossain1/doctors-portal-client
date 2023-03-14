@@ -1,5 +1,6 @@
 import React from "react";
 import chair from "../../../assets/images/chair.png";
+import PrimaryButton from "../../../Components/PrimaryButton/PrimaryButton";
 import "./Banner.css";
 
 const Banner = () => {
@@ -18,9 +19,7 @@ const Banner = () => {
             health. Regular brushing, flossing, and dental checkups can help
             prevent dental problems and keep your teeth healthy and strong.
           </p>
-          <button className="btn btn-primary bg-gradient-to-r from-primary to-secondary text-white">
-            Get Started
-          </button>
+          <PrimaryButton>Get Started</PrimaryButton>
         </div>
       </div>
     </div>
