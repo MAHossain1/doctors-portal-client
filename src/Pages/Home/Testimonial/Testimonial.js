@@ -24,8 +24,8 @@ const Testimonial = () => {
       img: people2,
     },
     {
-      _id: 1,
-      name: "Jorina Rodrigez",
+      _id: 3,
+      name: "Jorzina Rodrigez",
       customerSay:
         "The dental care service was excellent. The staff was friendly and knowledgeable, and the treatment was efficient and painless.",
       location: "Welington",
