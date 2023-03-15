@@ -1,5 +1,5 @@
 import React from "react";
-import Services from "../../Services/Services/Services";
+import Services from "../Services/Services/Services";
 import Banner from "../Banner/Banner";
 import ContactUs from "../ContactUs/ContactUs";
 import DentalCare from "../DentalCare/DentalCare";
