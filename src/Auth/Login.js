@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthProvider/AuthProvider";
 
 const Login = () => {
+  const { signIn } = useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const [data, setData] = useState("");
+
+  const [loginError, setLoginError] = useState("");
+
+  // const [data, setData] = useState("");
   const handleLogin = data => {
-    console.log(data);
+    const from = location?.state?.from?.pathname || "/";
+    setLoginError("");
+    signIn(data.email, data.password)
+      .then(result => {
+        const user = result.user;
+        console.log(user);
+        toast.success("User logged in successfully");
+        navigate(from, { replace: true });
+      })
+      .catch(e => {
+        console.error(e.message);
+        setLoginError(e.message);
+      });
+    // console.log(data);
   };
 
   return (
@@ -67,13 +89,16 @@ const Login = () => {
             type="submit"
             value="Login"
           />
-          <p>
-            New to Doctors Portal?{" "}
-            <Link className="text-primary" to="/signup">
-              Create new Account
-            </Link>{" "}
-          </p>
+          <div>
+            {loginError && <p className="text-red-500">{loginError}</p>}
+          </div>
         </form>
+        <p>
+          New to Doctors Portal?{" "}
+          <Link className="text-primary" to="/signup">
+            Create new Account
+          </Link>{" "}
+        </p>
         <div className="divider">OR</div>
         <button className="btn btn-outline btn-accent w-full">
           continue With Google

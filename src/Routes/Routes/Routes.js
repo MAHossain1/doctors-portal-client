@@ -3,7 +3,9 @@ import Login from "../../Auth/Login";
 import SignUp from "../../Auth/SignUp";
 import Main from "../../Layout/Main";
 import Appointment from "../../Pages/Appointment/Appointment/Appointment";
+import Dashboard from "../../Pages/Dashboard/Dashboard/Dashboard";
 import Home from "../../Pages/Home/Home/Home";
+import RequireAuth from "../Private/RequireAuth";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,7 @@ const router = createBrowserRouter([
         path: "/login",
         element: <Login></Login>,
       },
+
       {
         path: "/signup",
         element: <SignUp></SignUp>,
@@ -27,6 +30,14 @@ const router = createBrowserRouter([
         element: <Appointment></Appointment>,
       },
     ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <RequireAuth>
+        <Dashboard></Dashboard>
+      </RequireAuth>
+    ),
   },
 ]);
 
