@@ -9,6 +9,8 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const from = location.state?.from?.pathname || "/";
+
   const {
     register,
     formState: { errors },
@@ -19,14 +21,13 @@ const Login = () => {
 
   // const [data, setData] = useState("");
   const handleLogin = data => {
-    const from = location?.state?.from?.pathname || "/";
     setLoginError("");
     signIn(data.email, data.password)
       .then(result => {
         const user = result.user;
+        navigate(from, { replace: true });
         console.log(user);
         toast.success("User logged in successfully");
-        navigate(from, { replace: true });
       })
       .catch(e => {
         console.error(e.message);
