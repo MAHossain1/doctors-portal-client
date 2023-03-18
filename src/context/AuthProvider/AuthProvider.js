@@ -4,6 +4,8 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
@@ -21,13 +23,21 @@ const AuthProvider = ({ children }) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
+  const emailVerify = () => {
+    return sendEmailVerification(auth.currentUser);
+  };
+
   const signIn = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   const updateUser = userInfo => {
-    return updateProfile(user, userInfo);
+    return updateProfile(auth.currentUser, userInfo);
+  };
+
+  const resetPassword = email => {
+    return sendPasswordResetEmail(auth, email);
   };
 
   const logOut = () => {
@@ -37,14 +47,25 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
-      console.log("user observing");
-      setUser(currentUser);
-      setLoading(false);
+      if (currentUser === null || currentUser.emailVerified) {
+        console.log("user observing");
+        setUser(currentUser);
+        setLoading(false);
+      }
     });
     return () => unsubscribe();
   }, []);
 
-  const authInfo = { user, createUser, updateUser, signIn, logOut, loading };
+  const authInfo = {
+    user,
+    createUser,
+    emailVerify,
+    updateUser,
+    resetPassword,
+    signIn,
+    logOut,
+    loading,
+  };
 
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>

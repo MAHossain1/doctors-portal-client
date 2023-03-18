@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider/AuthProvider";
 
 const Login = () => {
-  const { signIn } = useContext(AuthContext);
+  const { signIn, resetPassword, user } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -19,21 +19,37 @@ const Login = () => {
 
   const [loginError, setLoginError] = useState("");
 
-  // const [data, setData] = useState("");
+  const [data, setData] = useState("");
+
   const handleLogin = data => {
+    setData(data);
     setLoginError("");
     signIn(data.email, data.password)
       .then(result => {
         const user = result.user;
-        navigate(from, { replace: true });
+        if (user.emailVerified) {
+          navigate(from, { replace: true });
+          toast.success("User logged in successfully");
+        }
+        if (user.emailVerified === false) {
+          toast.error("Please Verify Your email");
+        }
         console.log(user);
-        toast.success("User logged in successfully");
       })
       .catch(e => {
         console.error(e.message);
         setLoginError(e.message);
       });
+
     // console.log(data);
+  };
+
+  const handleResetPassword = () => {
+    resetPassword(data?.email)
+      .then(() => {
+        toast.success("password reset email sent!");
+      })
+      .catch(e => console.error(e));
   };
 
   return (
@@ -79,7 +95,9 @@ const Login = () => {
             )}
             <label className="label">
               <span className="label-text">
-                <small>Forget Password</small>
+                <small className="cursor-pointer" onClick={handleResetPassword}>
+                  Forget Password
+                </small>
               </span>
             </label>
           </div>

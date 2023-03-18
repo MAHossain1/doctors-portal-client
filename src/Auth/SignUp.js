@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider/AuthProvider";
 
 const SignUp = () => {
-  const { createUser, updateUser } = useContext(AuthContext);
-  const [singupError, setSignupError] = useState("");
+  const { createUser, updateUser, emailVerify } = useContext(AuthContext);
+  const [signupError, setSignupError] = useState("");
 
   const {
     register,
@@ -14,27 +14,39 @@ const SignUp = () => {
     handleSubmit,
   } = useForm();
 
-  const [data, setData] = useState("");
-
   const handleSignup = data => {
     setSignupError("");
+
+    // create user
     createUser(data.email, data.password)
       .then(result => {
         const user = result.user;
-        toast.success("User created successfully");
-        // console.log(user);
+        // toast.success("User created successfully");
+        console.log(user);
+
+        //update user info
         const userInfo = {
           displayName: data.name,
         };
+        console.log(data.name);
         updateUser(userInfo)
           .then(() => {})
           .catch(e => console.log(e));
+
+        handleEmailVerification();
+        toast.success("Please Verify your email");
       })
       .catch(e => {
         setSignupError(e.message);
         console.error(e);
       });
     // console.log(data);
+  };
+
+  const handleEmailVerification = () => {
+    emailVerify()
+      .then(() => {})
+      .catch(e => console.error(e));
   };
 
   return (
@@ -111,7 +123,7 @@ const SignUp = () => {
             type="submit"
             value="sign up"
           />
-          {singupError && <p className="text-red-500">{singupError}</p>}
+          {signupError && <p className="text-red-500">{signupError}</p>}
           <p>
             Already have an Account?{" "}
             <Link className="text-primary" to="/login">
