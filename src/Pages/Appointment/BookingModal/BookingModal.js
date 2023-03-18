@@ -25,8 +25,21 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
       email,
       phone,
     };
-    toast.success("Your booking successfully Placed");
-    setTreatment(null);
+
+    fetch("http://localhost:5000/bookings", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        toast.success("Your booking successfully Placed");
+        setTreatment(null);
+      });
+
     console.log(booking);
   };
 
@@ -62,7 +75,7 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
             <input
               type="text"
               name="name"
-              value={user?.displayName}
+              defaultValue={user?.displayName}
               placeholder="Full Name"
               className="input input-bordered w-full"
             />
@@ -75,7 +88,8 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
             <input
               type="email"
               name="email"
-              value={user?.email}
+              defaultValue={user?.email}
+              disabled
               placeholder="Email"
               className="input input-bordered w-full"
             />
