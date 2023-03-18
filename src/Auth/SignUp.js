@@ -1,11 +1,18 @@
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider/AuthProvider";
 
 const SignUp = () => {
-  const { createUser, updateUser, emailVerify } = useContext(AuthContext);
+  const { createUser, updateUser, emailVerify, googleLogin } =
+    useContext(AuthContext);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const from = location.state?.from?.pathname || "/";
+
   const [signupError, setSignupError] = useState("");
 
   const {
@@ -41,6 +48,19 @@ const SignUp = () => {
         console.error(e);
       });
     // console.log(data);
+  };
+
+  const handleGoogleSign = () => {
+    googleLogin()
+      .then(result => {
+        const user = result.user;
+        navigate(from, { replace: true });
+        console.log(user);
+      })
+      .catch(e => {
+        setSignupError(e.message);
+        console.log(e);
+      });
   };
 
   const handleEmailVerification = () => {
@@ -132,7 +152,10 @@ const SignUp = () => {
           </p>
         </form>
         <div className="divider">OR</div>
-        <button className="btn btn-outline btn-accent w-full">
+        <button
+          onClick={handleGoogleSign}
+          className="btn btn-outline btn-accent w-full"
+        >
           continue With Google
         </button>
       </div>

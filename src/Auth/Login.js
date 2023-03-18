@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider/AuthProvider";
 
 const Login = () => {
-  const { signIn, resetPassword, user } = useContext(AuthContext);
+  const { signIn, resetPassword, googleLogin } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -42,6 +42,19 @@ const Login = () => {
       });
 
     // console.log(data);
+  };
+
+  const handleGoogleSign = () => {
+    googleLogin()
+      .then(result => {
+        const user = result.user;
+        navigate(from, { replace: true });
+        console.log(user);
+      })
+      .catch(e => {
+        setLoginError(e.message);
+        console.log(e);
+      });
   };
 
   const handleResetPassword = () => {
@@ -119,7 +132,10 @@ const Login = () => {
           </Link>{" "}
         </p>
         <div className="divider">OR</div>
-        <button className="btn btn-outline btn-accent w-full">
+        <button
+          onClick={handleGoogleSign}
+          className="btn btn-outline btn-accent w-full"
+        >
           continue With Google
         </button>
       </div>

@@ -1,9 +1,11 @@
 import { format } from "date-fns";
-import React from "react";
+import React, { useContext } from "react";
 import { toast } from "react-hot-toast";
+import { AuthContext } from "../../../context/AuthProvider/AuthProvider";
 
 const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
   const { name, slots } = treatment;
+  const { user } = useContext(AuthContext);
 
   const date = format(selectedDate, "PP");
 
@@ -60,6 +62,7 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
             <input
               type="text"
               name="name"
+              value={user?.displayName}
               placeholder="Full Name"
               className="input input-bordered w-full"
             />
@@ -72,6 +75,7 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
             <input
               type="email"
               name="email"
+              value={user?.email}
               placeholder="Email"
               className="input input-bordered w-full"
             />
