@@ -3,8 +3,8 @@ import React, { useContext } from "react";
 import { toast } from "react-hot-toast";
 import { AuthContext } from "../../../context/AuthProvider/AuthProvider";
 
-const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
-  const { name, slots } = treatment;
+const BookingModal = ({ treatment, selectedDate, setTreatment, refetch }) => {
+  const { name: treatmentName, slots } = treatment;
   const { user } = useContext(AuthContext);
 
   const date = format(selectedDate, "PP");
@@ -19,7 +19,7 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
 
     const booking = {
       appointmentDate: date,
-      treatment: treatment.name,
+      treatment: treatmentName,
       patient: name,
       slot,
       email,
@@ -35,12 +35,17 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
-        toast.success("Your booking successfully Placed");
-        setTreatment(null);
+        // console.log(data);
+        if (data.acknowledged) {
+          toast.success("Your booking successfully Placed");
+          setTreatment(null);
+          refetch();
+        } else {
+          toast.error(data.message);
+        }
       });
 
-    console.log(booking);
+    // console.log(booking);
   };
 
   return (
@@ -54,7 +59,7 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
           >
             ✕
           </label>
-          <h3 className="text-lg font-bold">{name}</h3>
+          <h3 className="text-lg font-bold">{treatmentName}</h3>
           <form
             onSubmit={handleBooking}
             className="mt-6 grid grid-cols-1 gap-2"
