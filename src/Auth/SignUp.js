@@ -80,7 +80,8 @@ const SignUp = () => {
     googleLogin()
       .then(result => {
         const user = result.user;
-        navigate(from, { replace: true });
+        setCreatedUserEmail(user?.email);
+        // navigate(from, { replace: true });
         console.log(user);
       })
       .catch(e => {
