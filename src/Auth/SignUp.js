@@ -26,7 +26,7 @@ const SignUp = () => {
   console.log(token);
 
   if (token) {
-    navigate("/");
+    navigate(from, { replace: true });
   }
 
   const handleSignup = data => {
