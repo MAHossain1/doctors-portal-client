@@ -27,13 +27,14 @@ const Login = () => {
     signIn(data.email, data.password)
       .then(result => {
         const user = result.user;
-        if (user.emailVerified) {
-          navigate(from, { replace: true });
-          toast.success("User logged in successfully");
-        }
-        if (user.emailVerified === false) {
-          toast.error("Please Verify Your email");
-        }
+        navigate(from, { replace: true });
+        toast.success("User logged in successfully");
+        // if (user.emailVerified) {
+
+        // }
+        // if (user.emailVerified === false) {
+        //   toast.error("Please Verify Your email");
+        // }
         console.log(user);
       })
       .catch(e => {

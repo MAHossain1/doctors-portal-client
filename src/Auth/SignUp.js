@@ -3,23 +3,31 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider/AuthProvider";
+import useToken from "../hooks/useToken";
 
 const SignUp = () => {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
   const { createUser, updateUser, emailVerify, googleLogin } =
     useContext(AuthContext);
+  const [signupError, setSignupError] = useState("");
+  const [createdUserEmail, setCreatedUserEmail] = useState("");
+  const [token] = useToken(createdUserEmail);
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const from = location.state?.from?.pathname || "/";
 
-  const [signupError, setSignupError] = useState("");
+  // get token form useToken
+  console.log(token);
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm();
+  if (token) {
+    navigate("/");
+  }
 
   const handleSignup = data => {
     setSignupError("");
@@ -28,26 +36,44 @@ const SignUp = () => {
     createUser(data.email, data.password)
       .then(result => {
         const user = result.user;
-        // toast.success("User created successfully");
+        toast.success("User created successfully");
         console.log(user);
 
         //update user info
         const userInfo = {
           displayName: data.name,
         };
-        console.log(data.name);
+
         updateUser(userInfo)
-          .then(() => {})
+          .then(() => {
+            saveUser(data.name, data.email);
+          })
           .catch(e => console.log(e));
 
-        handleEmailVerification();
-        toast.success("Please Verify your email");
+        // handleEmailVerification();
+        // toast.success("Please Verify your email");
       })
       .catch(e => {
         setSignupError(e.message);
         console.error(e);
       });
     // console.log(data);
+  };
+
+  const saveUser = (name, email) => {
+    const user = { name, email };
+    fetch("http://localhost:5000/users", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        setCreatedUserEmail(email);
+      });
   };
 
   const handleGoogleSign = () => {
