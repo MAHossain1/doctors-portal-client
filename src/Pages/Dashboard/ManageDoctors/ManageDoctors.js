@@ -3,12 +3,6 @@ import { toast } from "react-hot-toast";
 import { useQuery } from "react-query";
 import ConfirmationModal from "../../Shared/ConfirmationModal/ConfirmationModal";
 const ManageDoctors = () => {
-  const [deletingDoctor, setDeletingDoctor] = useState(null);
-
-  const closeModal = () => {
-    setDeletingDoctor(null);
-  };
-
   const { data: doctors = [], refetch } = useQuery({
     queryKey: ["doctors"],
     queryFn: async () => {
@@ -24,9 +18,13 @@ const ManageDoctors = () => {
     },
   });
 
+  const [deletingDoctor, setDeletingDoctor] = useState(null);
+
+  const closeModal = () => {
+    setDeletingDoctor(null);
+  };
+
   const handleDeleteDoctor = doctor => {
-    console.log(doctor);
-    console.log(doctor._id);
     const proceed = window.confirm("Are you sure,to cancel this order?");
     if (proceed) {
       fetch(`http://localhost:5000/doctors/${doctor._id}`, {
@@ -37,9 +35,11 @@ const ManageDoctors = () => {
       })
         .then(res => res.json())
         .then(data => {
-          console.log(data);
-          toast.success("Doctor deleted Successful");
-          refetch();
+          //   console.log(data);
+          if (data.deletedCount > 0) {
+            toast.success("Doctor deleted Successful");
+            refetch();
+          }
         });
     }
   };
@@ -97,6 +97,7 @@ const ManageDoctors = () => {
           title={`Are You Sure you want to delete?`}
           message={`If you delete ${deletingDoctor.name}. You'll not be able to reach him again.`}
           successAction={handleDeleteDoctor}
+          successBtnName="Delete"
           modalData={deletingDoctor}
           closeModal={closeModal}
         ></ConfirmationModal>
