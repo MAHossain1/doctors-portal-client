@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useQuery } from "react-query";
+import ConfirmationModal from "../../Shared/ConfirmationModal/ConfirmationModal";
 const ManageDoctors = () => {
+  const [deletingDoctor, setDeletingDoctor] = useState(null);
+
+  const closeModal = () => {
+    setDeletingDoctor(null);
+  };
+
   const { data: doctors = [], refetch } = useQuery({
     queryKey: ["doctors"],
     queryFn: async () => {
@@ -17,10 +24,12 @@ const ManageDoctors = () => {
     },
   });
 
-  const handleDoctorDelete = id => {
+  const handleDeleteDoctor = doctor => {
+    console.log(doctor);
+    console.log(doctor._id);
     const proceed = window.confirm("Are you sure,to cancel this order?");
     if (proceed) {
-      fetch(`http://localhost:5000/doctors/${id}`, {
+      fetch(`http://localhost:5000/doctors/${doctor._id}`, {
         method: "DELETE",
         headers: {
           authorization: `bearer ${localStorage.getItem("accessToken")}`,
@@ -69,19 +78,29 @@ const ManageDoctors = () => {
                 <td>{doctor.name}</td>
                 <td>{doctor.specialty}</td>
                 <td>{doctor.email}</td>
-                <th>
-                  <button
-                    onClick={() => handleDoctorDelete(doctor._id)}
-                    className="btn btn-accent btn-xs rounded-full"
+                <td>
+                  <label
+                    onClick={() => setDeletingDoctor(doctor)}
+                    htmlFor="confirmation-modal"
+                    className="btn btn-warning text-white btn-xs rounded-full"
                   >
                     X
-                  </button>
-                </th>
+                  </label>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {deletingDoctor && (
+        <ConfirmationModal
+          title={`Are You Sure you want to delete?`}
+          message={`If you delete ${deletingDoctor.name}. You'll not be able to reach him again.`}
+          successAction={handleDeleteDoctor}
+          modalData={deletingDoctor}
+          closeModal={closeModal}
+        ></ConfirmationModal>
+      )}
     </div>
   );
 };
