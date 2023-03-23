@@ -1,7 +1,8 @@
 import React from "react";
+import { toast } from "react-hot-toast";
 import { useQuery } from "react-query";
 const ManageDoctors = () => {
-  const { data: doctors = [] } = useQuery({
+  const { data: doctors = [], refetch } = useQuery({
     queryKey: ["doctors"],
     queryFn: async () => {
       try {
@@ -17,7 +18,21 @@ const ManageDoctors = () => {
   });
 
   const handleDoctorDelete = id => {
-    console.log(`${id} clicked`);
+    const proceed = window.confirm("Are you sure,to cancel this order?");
+    if (proceed) {
+      fetch(`http://localhost:5000/doctors/${id}`, {
+        method: "DELETE",
+        headers: {
+          authorization: `bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          toast.success("Doctor deleted Successful");
+          refetch();
+        });
+    }
   };
 
   return (
