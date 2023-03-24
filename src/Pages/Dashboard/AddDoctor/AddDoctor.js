@@ -15,6 +15,7 @@ const AddDoctor = () => {
   const navigate = useNavigate();
 
   const imageHostKey = process.env.REACT_APP_imgbb;
+  console.log(imageHostKey);
 
   const { data: specialties = [], isLoading } = useQuery({
     queryKey: ["specialty"],
@@ -27,6 +28,7 @@ const AddDoctor = () => {
 
   const handleAddDoctor = data => {
     const image = data.image[0];
+    console.log(image);
     const formData = new FormData();
     formData.append("image", image);
     const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`;

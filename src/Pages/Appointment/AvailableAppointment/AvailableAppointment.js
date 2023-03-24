@@ -28,20 +28,6 @@ const AvailableAppointment = ({ selectedDate }) => {
     return <Loading></Loading>;
   }
 
-  // Get Data using fetch not async method
-  // const { data: appointmentOptions = [] } = useQuery({
-  //   queryKey: ["appointment"],
-  //   queryFn: () =>
-  //     fetch("http://localhost:5000/appointment").then(res => res.json()),
-  // });
-
-  //Previous System to get data
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/appointment")
-  //     .then(res => res.json())
-  //     .then(data => setAppointmentOptions(data));
-  // }, []);
-
   return (
     <section className="my-10">
       <p className="text-center text-secondary font-semibold">
