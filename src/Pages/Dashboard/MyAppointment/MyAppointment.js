@@ -1,16 +1,14 @@
 import React, { useContext } from "react";
-import { LoaderIcon } from "react-hot-toast";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthProvider/AuthProvider";
-import Loading from "../../Shared/Loading/Loading";
 
 const MyAppointment = () => {
   const { user } = useContext(AuthContext);
 
-  const url = `http://localhost:5000/bookings?email=${user?.email}`;
+  const url = `https://doctors-portal-server-nine-beta.vercel.app/bookings?email=${user?.email}`;
 
-  const { data: bookings = [], isLoading } = useQuery({
+  const { data: bookings = [] } = useQuery({
     queryKey: ["bookings", user?.email],
     queryFn: async () => {
       const res = await fetch(url, {
@@ -22,10 +20,6 @@ const MyAppointment = () => {
       return data;
     },
   });
-
-  // if (isLoading) {
-  //   return <Loading></Loading>;
-  // }
 
   return (
     <div>
@@ -57,7 +51,7 @@ const MyAppointment = () => {
                     </Link>
                   )}
                   {booking.price && booking.paid && (
-                    <span className="text-primary">Paid</span>
+                    <span className="text-green-500">Paid</span>
                   )}
                 </td>
               </tr>

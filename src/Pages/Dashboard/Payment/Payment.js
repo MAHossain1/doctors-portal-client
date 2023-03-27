@@ -5,13 +5,12 @@ import { useLoaderData, useNavigation } from "react-router-dom";
 import Loading from "../../Shared/Loading/Loading";
 import CheckoutForm from "./CheckoutForm";
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PK);
-console.log(stripePromise);
 
 const Payment = () => {
-  const navigation = useNavigation();
   const booking = useLoaderData();
   const { treatment, appointmentDate, price, slot } = booking;
 
+  const navigation = useNavigation();
   if (navigation.state === "loading") {
     return <Loading></Loading>;
   }

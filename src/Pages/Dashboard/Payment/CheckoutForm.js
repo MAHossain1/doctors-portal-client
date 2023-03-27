@@ -1,6 +1,5 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import React, { useEffect, useState } from "react";
-import Loading from "../../Shared/Loading/Loading";
 
 const CheckoutForm = ({ booking }) => {
   const stripe = useStripe();
@@ -17,15 +16,18 @@ const CheckoutForm = ({ booking }) => {
 
   useEffect(() => {
     // setIsLoading(true);
-    fetch("http://localhost:5000/create-payment-intent", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `bearer ${localStorage.getItem("accessToken")}`,
-      },
+    fetch(
+      "https://doctors-portal-server-nine-beta.vercel.app/create-payment-intent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `bearer ${localStorage.getItem("accessToken")}`,
+        },
 
-      body: JSON.stringify({ price }),
-    })
+        body: JSON.stringify({ price }),
+      }
+    )
       .then(res => res.json())
       .then(data => setClientSecret(data.clientSecret));
     // setIsLoading(false);
@@ -85,7 +87,7 @@ const CheckoutForm = ({ booking }) => {
         bookingId: _id,
       };
 
-      fetch("http://localhost:5000/payment", {
+      fetch("https://doctors-portal-server-nine-beta.vercel.app/payment", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
